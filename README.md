@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Image to Base64</title>
+  <script>
+    function toBase64(imgUri) {
+      var img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = function () {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        var dataURL = canvas.toDataURL("image/jpeg");
+        // Send Base64 string back to App Inventor
+        window.AppInventor.setWebViewString(dataURL);
+      };
+      img.onerror = function() {
+        window.AppInventor.setWebViewString("ERROR_LOADING_IMAGE");
+      }
+      img.src = imgUri;
+    }
+
+    window.onload = function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var imgUri = urlParams.get('img');
+      if (imgUri) {
+        toBase64(imgUri);
+      } else {
+        window.AppInventor.setWebViewString("NO_IMAGE_URI");
+      }
+    };
+  </script>
+</head>
+<body>
+  <h3>Converting image to Base64...</h3>
+</body>
+</html>
